@@ -1,0 +1,17 @@
+/* Language name */
+"!Language" = "Italiano";
+
+/* Label with the plugin name. [load.py] */
+"Fuel levels" = "Carburante";
+
+/* Waiting for the json file to be populated and made accessible. [load.py] */
+"waiting for data …" = "in attesa dei dati …";
+
+/* Error message for missing tank data. [load.py] */
+"ERROR" = "ERRORE";
+
+/* Quantity of fuel in the main tank. [load.py] */
+"main" = "principale";
+
+/* Amount of fuel in the operating tank. [load.py] */
+"reservoir" = "operativo";
