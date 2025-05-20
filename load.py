@@ -3,6 +3,7 @@ import logging
 import l10n
 import functools
 import os
+import semantic_version
 
 from typing import Optional, Tuple, Dict, Any
 from config import appname, appversion
@@ -10,14 +11,25 @@ from config import appname, appversion
 plugin_name = os.path.basename(os.path.dirname(__file__))  # Get the plugin name from the directory path
 logger = logging.getLogger(f'{appname}.{plugin_name}')  # Set up logging for the plugin
 
-# Check if the app version is 5.11.0 or higher
-# Split version string into major, minor, and fix components
-major, minor, fix = map(int, (str(appversion).split('+')[0]).split('.'))
-if major >= 5 and minor >= 11 and fix >= 0: # check if version is 5.11.0 or higher
-    # use the new translation method
+
+# Determine the application version and select the appropriate translation method
+
+# Up until version 5.0.0-beta1, appversion is a string.
+if isinstance(appversion, str):
+    core_version = semantic_version.Version(appversion)
+# From 5.0.0-beta1 onwards, appversion is a function returning semantic_version.Version.
+elif callable(appversion):
+    core_version = appversion()
+
+# Extract major, minor, and fix components from the version (e.g., 5.11.0)
+major, minor, fix = map(int, (str(core_version).split('+')[0]).split('.'))
+
+# If the version is at least 5.11.0, use the new translation method; otherwise, use the old one.
+if major >= 5 and minor >= 11 and fix >= 0:
+    # New translation method (from 5.11.0 onwards)
     _ = functools.partial(l10n.translations.tl, context=__file__)
 else:
-    # use the old translation method
+    # Old translation method (up to 5.10.x)
     _ = functools.partial(l10n.Translations.translate, context=__file__)
 
 label: Optional[tk.Label]  # Main label for the plugin
